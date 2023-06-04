@@ -2,6 +2,14 @@
 
 MVP for docs specific chat bot.
 
+## Requirements
+
+Before getting started, ensure you have the following:
+
+* [Python](https://www.python.org/downloads/) - Version 3.7 or newer is required.
+* An active account on OpenAI, along with an [OpenAI API key](https://platform.openai.com/account/api-keys).
+* A Deep Lake account, complete with a [Deep Lake API key](https://app.activeloop.ai/?utm_source=referral&utm_medium=platform&utm_campaign=signup_promo_settings&utm_id=plg).
+
 ## Quickstart
 
 - Clone the repository
