@@ -60,6 +60,8 @@ Pyrhon3 chat.py
 
 ## Example interaction
 
+Sample interaction using the GPT3.5-turbo model. Use GPT4 for better responses.
+
 ```
 Please enter your question (or 'quit' to stop): what are chainstack core pillars?
 
