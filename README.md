@@ -58,5 +58,58 @@ It should be indexing arount 400 pages, it should take about 2 minutes.
 Pyrhon3 chat.py
 ```
 
+## Example interaction
+
+```
+Please enter your question (or 'quit' to stop): what are chainstack core pillars?
+
+Question: what are chainstack core pillars?
+Answer: Chainstack's core pillars are unbeatable pricing, unbounded performance, and unlimited flexibility.
+
+Tokens Used: 1178
+        Prompt Tokens: 1160
+        Completion Tokens: 18
+Successful Requests: 1
+Total Cost (USD): $0.002356
+
+Please enter your question (or 'quit' to stop): how can i start using the Ethereum API with chainstack?
+
+Question: how can i start using the Ethereum API with chainstack?
+Answer: To use the Ethereum API with Chainstack, you need to follow these steps:
+
+1. Sign up with Chainstack.
+2. Deploy an Ethereum RPC node.
+3. View your node access and credentials.
+4. Create an API key to authenticate your requests to the Chainstack API.
+5. Use tools such as curl or Postman to make manual requests to the Ethereum RPC node using JSON-RPC and the command line.
+
+Once you have completed these steps, you can start using the Ethereum API to interact with the Ethereum blockchain and build your applications.
+
+Tokens Used: 1389
+        Prompt Tokens: 1266
+        Completion Tokens: 123
+Successful Requests: 2
+Total Cost (USD): $0.0027780000000000005
+
+Please enter your question (or 'quit' to stop): what methods can i use to get ethereum blocks information?
+
+Question: what methods can i use to get ethereum blocks information?
+Answer: The following methods can be used to retrieve Ethereum block information when using the Ethereum API with Chainstack:
+
+- eth_blockNumber
+- eth_getBlockByHash
+- eth_getBlockByNumber
+- eth_getBlockTransactionCountByHash
+- eth_getBlockTransactionCountByNumber
+- eth_newBlockFilter
+
+These methods allow developers to access specific block details such as the block's transactions, timestamp, height, header, and more.
+
+Tokens Used: 1846
+        Prompt Tokens: 1739
+        Completion Tokens: 107
+Successful Requests: 2
+Total Cost (USD): $0.0036920000000000004
+```
 
  
