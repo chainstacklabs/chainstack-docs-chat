@@ -10,6 +10,12 @@ Before getting started, ensure you have the following:
 * An active account on OpenAI, along with an [OpenAI API key](https://platform.openai.com/account/api-keys).
 * A Deep Lake account, complete with a [Deep Lake API key](https://app.activeloop.ai/?utm_source=referral&utm_medium=platform&utm_campaign=signup_promo_settings&utm_id=plg).
 
+## Project structure
+
+* `docs-chat` directory is a Python virtual environment
+* `main.py` scrapes pages and creates vector database.
+* `chat.py` accepts users queries.
+
 ## Quickstart
 
 - Clone the repository
