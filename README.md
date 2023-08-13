@@ -40,6 +40,12 @@ cd chainstack-docs-chat
 python3 -m venv docs-chat
 ```
 
+- Activate the virtual environment:
+
+```sh
+source docs-chat/bin/activate
+```
+
 - Install dependencies
 
 ```sh
