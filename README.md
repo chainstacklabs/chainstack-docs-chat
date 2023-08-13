@@ -4,7 +4,7 @@ Simple CLI implemenation of a docs specific AI assistant. This project guides yo
 
 Read the article for an in depth guide:
 
-- []()
+- [LangChain practical projects — build a CLI chatbot](https://blog.davideai.dev/langchain-practical-projects-build-a-cli-chatbot)
 
 ## Requirements
 
