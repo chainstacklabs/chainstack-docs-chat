@@ -4,71 +4,86 @@ from langchain.vectorstores import DeepLake
 from langchain.chat_models import ChatOpenAI
 from langchain.chains import ConversationalRetrievalChain
 from langchain.embeddings import OpenAIEmbeddings
-from langchain.callbacks import get_openai_callback
+from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-# Load environment variables from .env file
-load_dotenv()
 
-# Set environment variables
-os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
-os.environ['ACTIVELOOP_TOKEN'] = os.getenv('ACTIVELOOP_TOKEN')
-language_model = os.getenv('LANGUAGE_MODEL')
+def load_environment_variables():
+    """Load environment variables from .env file."""
+    load_dotenv()
+    os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
+    os.environ['ACTIVELOOP_TOKEN'] = os.getenv('ACTIVELOOP_TOKEN')
 
-# Set DeepLake dataset path
-DEEPLAKE_PATH = os.getenv('DATASET_PATH')
+def initialize_embeddings():
+    """Initialize OpenAI embeddings and disallow special tokens."""
+    return OpenAIEmbeddings(disallowed_special=())
 
-# Initialize OpenAI embeddings and disallow special tokens
-EMBEDDINGS = OpenAIEmbeddings(disallowed_special=())
+def initialize_deeplake(embeddings):
+    """Initialize DeepLake vector store with OpenAI embeddings."""
+    return DeepLake(
+        dataset_path=os.getenv('DATASET_PATH'),
+        read_only=True,
+        embedding=embeddings,
+    )
 
-# Initialize DeepLake vector store with OpenAI embeddings
-deep_lake = DeepLake(
-    dataset_path=DEEPLAKE_PATH,
-    read_only=True,
-    embedding_function=EMBEDDINGS,
-)
+def initialize_retriever(deep_lake):
+    """Initialize retriever and set search parameters."""
+    retriever = deep_lake.as_retriever()
+    retriever.search_kwargs.update({
+        'distance_metric': 'cos',
+        'fetch_k': 100,
+        'maximal_marginal_relevance': True,
+        'k': 10,
+    })
+    return retriever
 
-# Initialize retriever and set search parameters
-retriever = deep_lake.as_retriever()
-retriever.search_kwargs.update({
-    'distance_metric': 'cos',
-    'fetch_k': 100,
-    'maximal_marginal_relevance': True,
-    'k': 10,
-})
+def initialize_chat_model():
+    """Initialize ChatOpenAI model."""
+    return ChatOpenAI(streaming=True, callbacks=[StreamingStdOutCallbackHandler()], model_name=os.getenv('LANGUAGE_MODEL'), temperature=0.0)
 
-# Initialize ChatOpenAI model
-model = ChatOpenAI(model_name=language_model, temperature=0.2) # gpt-3.5-turbo by default. Use gpt-4 for better and more accurate responses 
-
-# Initialize ConversationalRetrievalChain
-qa = ConversationalRetrievalChain.from_llm(model, retriever=retriever)
-
-# Initialize chat history
-chat_history = []
+def initialize_conversational_chain(model, retriever):
+    """Initialize ConversationalRetrievalChain."""
+    return ConversationalRetrievalChain.from_llm(model, retriever=retriever, return_source_documents=True)
 
 def get_user_input():
     """Get user input and handle 'quit' command."""
     question = input("\nPlease enter your question (or 'quit' to stop): ")
-    if question.lower() == 'quit':
-        return None
-    return question
+    return None if question.lower() == 'quit' else question
 
+# In case you want to format the result.
 def print_answer(question, answer):
     """Format and print question and answer."""
     print(f"\nQuestion: {question}\nAnswer: {answer}\n")
 
 def main():
     """Main program loop."""
+    load_environment_variables()
+    embeddings = initialize_embeddings()
+    deep_lake = initialize_deeplake(embeddings)
+    retriever = initialize_retriever(deep_lake)
+    model = initialize_chat_model()
+    qa = initialize_conversational_chain(model, retriever)
+
+    # In this case the chat history is stored in memory only
+    chat_history = []
+
     while True:
         question = get_user_input()
         if question is None:  # User has quit
             break
+        
+        # Get results based on question
+        result = qa({"question": question, "chat_history": chat_history})
+        chat_history.append((question, result['answer']))   
 
-        # Display token usage and approximate costs
-        with get_openai_callback() as tokens_usage:
-            result = qa({"question": question, "chat_history": chat_history})
-            chat_history.append((question, result['answer']))
-            print_answer(question, result['answer'])
-            print(tokens_usage)
+        # Take the first source to display
+        first_document = result['source_documents'][0]
+        metadata = first_document.metadata
+        source = metadata['source']
+
+        # We are streaming the response so no need to print those
+        #print(f"-> **Question**: {question}\n")
+        #print(f"**Answer**: {result['answer']}\n")
+        print(f"\n\n++source++: {source}")
 
 if __name__ == "__main__":
     main()

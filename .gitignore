@@ -1,8 +1,10 @@
 # Virtual env
 docs-chat/
 
+.DS_store
 # Vector DB
 local_vector_db/
+chainstack_docs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
